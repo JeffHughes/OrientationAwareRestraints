@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+
+    <style>
+        div {
+            border: 1px solid black;
+        }
+
+        .red {
+            background-color: #ffbbbb;
+        }
+
+        .blue {
+            background-color: #6699FF;
+        }
+    </style>
+</head>
+<body>
+    <h2>OAR Tests</h2>
+    <div trim-width horizontal-class="red" vertical-class="blue">trim-width horizontal-class="red" vertical-class="blue"</div>
+
+    <div min-square="20" horizontal-class="blue" vertical-class="red"> min-square="20" </div>
+
+    <!--<div min-square="35" horizontal-class="blue" vertical-class="red" style="position: absolute"> <div center-horizontally> center-horizontally</div> </div>
+
+    <div min-square="35" horizontal-class="red" vertical-class="blue" style="position: absolute"> <div center-vertically> center-vertically</div> </div>-->
+    <!--<div min-square="35" horizontal-class="red" vertical-class="blue" style="position: absolute"> <div center-both> center-both</div> </div>-->
+
+    <div id="a">a</div>
+    <div id="b">b</div>
+    <div horizontal-insert-after="#a" vertical-insert-after="#b" id="c">c</div>
+
+    <script src="https://jsonce.azurewebsites.net/jquery2.js"></script>
+    <script src="https://jsonce.azurewebsites.net/ViewportChangeDetection.js"></script>
+
+    <script src="/js/OAR.js"></script>
+</body>
+</html>

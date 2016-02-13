@@ -11,11 +11,19 @@ initialImage.src = image.attr("src");
 */
 
 function isVerticalOrientation() {
-    console.log($(window).width() + " " + $(window).height());
+    //console.log($(window).width() + " " + $(window).height());
     return $(window).width() < $(window).height();
 }
 function isHorizontalOrientation() {
     return !isVerticalOrientation();
+}
+
+/*== 0. ================*/
+
+function Full(ele) {
+    $(ele)
+        .css("width", "calc(99vw - 17px)")
+        .css("height", "99vh")
 }
 
 /*== 1. ================*/
@@ -30,6 +38,8 @@ function CenterVertically(ele) {
         .css("transform", "translateY(-50%)");
 }
 function CenterHorizontally(ele) {
+    Trim(ele);
+
     $(ele)
         .css("position", "relative")
         .css("left", "50%")
@@ -99,7 +109,7 @@ function VerticalMinHeight(ele) {
 }
 
 function HorizontalMinWidth(ele) {
-    console.log($(ele).innerWidth() + " " + $(ele).attr("horizontal-min-width"));
+    //console.log($(ele).innerWidth() + " " + $(ele).attr("horizontal-min-width"));
     if (isHorizontalOrientation() && $(ele).innerWidth() < $(ele).attr("horizontal-min-width"))
         $(ele).innerWidth($(ele).attr("horizontal-min-width"));
     else
@@ -135,7 +145,7 @@ function HideVertical(ele) {
         $(ele).show();
 }
 function HideHorizontal(ele) {
-    if (!isHorizontalOrientation())
+    if (isHorizontalOrientation())
         $(ele).hide();
     else
         $(ele).show();
@@ -218,7 +228,52 @@ function VerticalHideAboveHeight(ele) {
         $(ele).show();
 }
 
+/*== 7. ================*/
+function AddRemoveClasses(ele) {
+    if (isHorizontalOrientation()) {
+        $(ele).addClass($(ele).attr("horizontal-class"));
+        $(ele).removeClass($(ele).attr("vertical-class"));
+    }
+    else {
+        $(ele).addClass($(ele).attr("vertical-class"));
+        $(ele).removeClass($(ele).attr("horizontal-class"));
+    }
+}
+
+/*== 8. ================*/
+
+function VerticalInsertBefore(ele) {
+    if (isVerticalOrientation())
+        $(ele).insertBefore( $(ele).attr("vertical-insert-before"));
+}
+
+function VerticalInsertAfter(ele) {
+    if (isVerticalOrientation())
+        $(ele).insertAfter(  $(ele).attr("vertical-insert-after"));
+}
+
+function HorizontalInsertBefore(ele) {
+    if (isHorizontalOrientation())
+        $(ele).insertBefore( $(ele).attr("horizontal-insert-before"));
+}
+
+function HorizontalInsertAfter(ele) {
+    if (isHorizontalOrientation())
+        $(ele).insertAfter( $(ele).attr("horizontal-insert-after"));
+}
+
+//$.each($("[vertical-insert-before]"), function (i, v) { VerticalInsertBefore(v); })
+//$.each($("[horizontal-insert-before]"), function (i, v) { HorizontalInsertBefore(v); })
+
+//$.each($("[vertical-insert-after]"), function (i, v) { VerticalInsertAfter(v); })
+//$.each($("[horizontal-insert-after]"), function (i, v) { HorizontalInsertAfter(v); })
+
 function UpdateOARs() {
+    console.log("UpdateOARs: w:" + $(window).width() + ", h:" + $(window).height() + ", orientation:" + (isHorizontalOrientation() ? " horizontal " : " vertical "));
+
+    /*== 0. ================*/
+    $.each($("[full]"), function (i, v) { Full(v); })
+
     /*== 1. ================*/
     $.each($("[center-both]"), function (i, v) { CenterVertically(v); CenterHorizontally(v); })
     $.each($("[center-horizontally]"), function (i, v) { CenterHorizontally(v); })
@@ -272,10 +327,31 @@ function UpdateOARs() {
 
     $.each($("[vertical-hide-above-width]"), function (i, v) { VerticalHideAboveWidth(v); })
     $.each($("[vertical-hide-above-height]"), function (i, v) { VerticalHideAboveHeight(v); })
+
+    /*== 7. ================*/
+    $.each($("[vertical-class]"), function (i, v) { AddRemoveClasses(v); })
+    $.each($("[horizontal-class]"), function (i, v) { AddRemoveClasses(v); })
+
+    /*== 8. ================*/
+
+    $.each($("[vertical-insert-before]"), function (i, v) { VerticalInsertBefore(v); })
+    $.each($("[horizontal-insert-before]"), function (i, v) { HorizontalInsertBefore(v); })
+
+    $.each($("[vertical-insert-after]"), function (i, v) { VerticalInsertAfter(v); })
+    $.each($("[horizontal-insert-after]"), function (i, v) { HorizontalInsertAfter(v); })
 }
 
-$(function () {
-    UpdateOARs();
-    $(document).on("HeightOrWidthChanged", UpdateOARs);
-    $(document).on("OrientationChanged", UpdateOARs);
-});
+function StartOARs() {
+    if (typeof jQuery === 'undefined') {
+        setTimeout(StartOARs, 250);
+    } else {
+        $(function () {
+            console.log("OARs started");
+            UpdateOARs();
+            $(document).on("HeightOrWidthChanged", UpdateOARs);
+            $(document).on("OrientationChanged", UpdateOARs);
+        })
+    }
+}
+
+StartOARs();
